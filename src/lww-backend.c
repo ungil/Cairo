@@ -47,6 +47,7 @@ static void lww_save_page(Rcairo_backend* be, int pageno){
 
 /*---- resize ----*/
 static void lww_resize(Rcairo_backend* be, double width, double height){
+	Rprintf("");
 	Rcairo_lww_data *xd = (Rcairo_lww_data *) be->backendSpecific;
 	RECT r;
 	HBITMAP ob;
