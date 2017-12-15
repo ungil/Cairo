@@ -9,6 +9,7 @@
 #include "ps-backend.h"
 #include "xlib-backend.h"
 #include "w32-backend.h"
+#include "lww-backend.h"
 #include "img-tiff.h" /* for TIFF_COMPR_LZW */
 #include <Rversion.h>
 #define USE_RINTERNALS 1
@@ -700,10 +701,20 @@ Rboolean CairoGD_Open(NewDevDesc *dd, CairoGDDesc *xd,  const char *type, int co
 		xd->cb->flags |= CDF_HAS_UI|CDF_OPAQUE;
 		if (!strcmp(type,"x11") || !strcmp(type,"X11") || !strcmp(type,"xlib"))
 			xd->cb = Rcairo_new_xlib_backend(xd->cb, file, w, h, umpl);
-		else if (!strncmp(type,"win",3))
+		else if (!strcmp(type,"lw")){
+			SEXP arg = findArg("hwnd", aux);
+			void *ptr = NULL;
+			if (arg && arg!=R_NilValue) ptr = (void *) asInteger(arg);
+			if (ptr!=NULL){
+				xd->cb = Rcairo_new_lww_backend(xd->cb, file, w, h, umpl, ptr);
+			}else{
+				error("Output type lw requires a non-null HWND pointer.");
+				return FALSE;
+			}
+		}else if (!strncmp(type,"win",3))
 			xd->cb = Rcairo_new_w32_backend(xd->cb, file, w, h, umpl);
 		else {
-			error("Unsupported output type \"%s\" - choose from png, png24, jpeg, tiff, pdf, ps, svg, win and x11.", type);
+			error("Unsupported output type \"%s\" - choose from lw, png, png24, jpeg, tiff, pdf, ps, svg, win and x11.", type);
 			return FALSE;
 		}
 	}

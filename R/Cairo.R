@@ -4,7 +4,7 @@
 ### mapping of supported type names to canonical type names
 ### as of 1.3-2 png/png24/png32 are the same (we don't support png8 anyway)
 .supported.types <- c(png="png",png24="png",png32="png",jpeg="jpeg",jpg="jpeg",tiff="tiff",tif="tiff",
-					  pdf="pdf",svg="svg",ps="ps",postscript="ps",x11="x11",xlib="x11",
+					  pdf="pdf",svg="svg",ps="ps",postscript="ps",x11="x11",xlib="x11",lw="lw",
 					  win="win",win32="win",window="win",windows="win",w32="win",raster="raster")
 
 Cairo <- function(width=640, height=480, file="", type="png", pointsize=12, bg="transparent", canvas="white", units="px", dpi="auto", ...) {
@@ -137,6 +137,17 @@ CairoWin <- function(width = 7, height = 7, pointsize = 12,
 					 buffered = getOption("windowsBuffered"),
 					 restoreConsole = FALSE, ...) {
 	Cairo(width, height, '', 'win', pointsize=pointsize, bg=bg, units="in", ...)
+}
+
+CairoLW <- function(width = 100, height = 100, pointsize = 12, hwnd,
+					 record = getOption("graphics.record"),
+					 rescale = c("R", "fit", "fixed"), xpinch, ypinch,
+					 bg = "transparent", canvas = "white",
+					 gamma = getOption("gamma"), xpos = NA, ypos = NA,
+					 buffered = getOption("windowsBuffered"),
+					 restoreConsole = FALSE, ...) {
+        if (missing(hwnd)) stop("CairoLW needs the handle to the parent window.")
+        Cairo(width, height, '', 'lw', pointsize=pointsize, bg=bg, hwnd=hwnd, ...)
 }
 
 Cairo.serial <- function(device = dev.cur()) .Call("Cairo_get_serial", device, PACKAGE="Cairo")
