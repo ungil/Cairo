@@ -30,9 +30,9 @@ Example of use:
         (slot-value cairo-pane 'capi::resize-callback) #'display-cairo))
 
 (defmethod open-cairo ((cairo-pane cairo-pane))
-  (setf (device cairo-pane) (first (r "CairoLW" :hwnd (capi:simple-pane-handle cairo-pane)
-                                      :width (capi:simple-pane-visible-width cairo-pane) 
-                                      :height (capi:simple-pane-visible-height cairo-pane))))
+  (setf (device cairo-pane) (first (r:r "CairoLW" :hwnd (capi:simple-pane-handle cairo-pane)
+					:width (capi:simple-pane-visible-width cairo-pane) 
+					:height (capi:simple-pane-visible-height cairo-pane))))
   (setf (backend cairo-pane) (backend-pointer)))
 
 (defmethod close-cairo ((cairo-pane cairo-pane))
@@ -76,3 +76,5 @@ Example of use:
 
 (capi:display (make-instance 'cairo-demo))
 ```
+
+The following demo executable should work if a standard installation of R 3.4.3 is present: http://www.ungil.com/rcl-capi-demo.exe
